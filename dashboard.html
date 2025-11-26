@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Codelet • Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div style="display:flex;min-height:100vh">
+    <aside class="sidebar">
+      <h2>Codelet</h2>
+      <a class="side-link" href="dashboard.html">Dashboard</a>
+      <a class="side-link" href="lessons.html">Lessons</a>
+      <a class="side-link" href="projects.html">Projects</a>
+      <a class="side-link" href="settings.html">Settings</a>
+      <button id="logoutBtn" class="logout" style="margin-top:16px">Log Out</button>
+    </aside>
+    <main style="flex:1;padding:32px">
+      <div class="profile-box" style="margin-bottom:20px">
+        <div class="profile-username" id="username">Loading...</div>
+        <div style="margin-top:6px" id="role">Role: Loading...</div>
+        <div id="badges" style="margin-top:12px"></div>
+      </div>
+
+      <div class="stats-box">
+        <h3>Stats</h3>
+        <div class="stat">Points: <strong id="points">0</strong></div>
+        <div class="stat">Tasks Completed: <strong id="tasks">0</strong></div>
+        <div class="stat">XP: <strong id="xp">0</strong></div>
+      </div>
+    </main>
+  </div>
+
+<script type="module" src="auth.js"></script>
+</body>
+</html>
