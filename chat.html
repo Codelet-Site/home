@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Codelet • Chat</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+    .chat-container {
+        background: var(--panel);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+    }
+    #messages {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+    .message {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        background: #550000;
+        border-radius: 10px;
+    }
+    .sender {
+        font-weight: 700;
+        color: var(--accent);
+    }
+    #msgInput {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: #520000;
+        color: white;
+        margin-top: 12px;
+    }
+    #sendBtn {
+        margin-top: 10px;
+        width: 140px;
+        padding: 12px;
+        background: var(--accent);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+</style>
+</head>
+<body class="app-layout">
+
+<div class="page-wrapper">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Codelet</h2>
+      <a class="side-link" href="dashboard.html">Dashboard</a>
+      <a class="side-link" href="lessons.html">Lessons</a>
+      <a class="side-link" href="projects.html">Projects</a>
+      <a class="side-link" href="chat.html" style="background:#550000">Chat</a>
+      <a class="side-link" href="settings.html">Settings</a>
+      <button id="logoutBtn" class="logout">Log Out</button>
+    </aside>
+
+    <!-- Chat UI -->
+    <main>
+        <h1 style="color:var(--accent); margin-top:0;">Global Chat</h1>
+
+        <div class="chat-container">
+            <div id="messages"></div>
+
+            <input id="msgInput" placeholder="Type a message...">
+            <button id="sendBtn">Send</button>
+        </div>
+    </main>
+
+</div>
+
+<script type="module">
+    import { db, auth } from "./auth.js";
+    import {
+        collection, addDoc, serverTimestamp,
+        query, orderBy, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const messagesEl = document.getElementById("messages");
+    const msgInput = document.getElementById("msgInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let username = "Unknown";
+
+    // Load username from Firestore
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    auth.onAuthStateChanged(async (user) => {
+        if (!user) return location.href = "login.html";
+
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) username = snap.data().username;
+    });
+
+    // Realtime message listener
+    const q = query(collection(db, "chat"), orderBy("timestamp", "asc"));
+
+    onSnapshot(q, (snapshot) => {
+        messagesEl.innerHTML = "";
+
+        snapshot.forEach((msg) => {
+            const data = msg.data();
+
+            const div = document.createElement("div");
+            div.classList.add("message");
+
+            div.innerHTML = `
+                <div class="sender">${data.username}</div>
+                <div>${data.text}</div>
+            `;
+
+            messagesEl.appendChild(div);
+        });
+
+        // Auto-scroll
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+
+    // Send message
+    sendBtn.onclick = async () => {
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        await addDoc(collection(db, "chat"), {
+            username: username,
+            text: text,
+            timestamp: serverTimestamp()
+        });
+
+        msgInput.value = "";
+    };
+</script>
+
+</body>
+</html>
