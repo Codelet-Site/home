@@ -118,11 +118,9 @@ onAuthStateChanged(auth, (user) => {
   const protectedPages = [
     "dashboard.html",
     "chat.html",
-    "lessons.html",
-    "projects.html",
+    "codets.html",
+    "market.html",
     "settings.html",
-    "codes.html",
-    "market.html"
   ];
   const path = window.location.pathname.split("/").pop();
 
