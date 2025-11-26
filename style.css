@@ -39,3 +39,22 @@ p{color:var(--muted); margin:0 0 22px}
 .header{display:flex; justify-content:space-between; align-items:center; gap:12px}
 .logout{background:#ff3b3b; border:none; padding:8px 12px; border-radius:8px; color:#fff; cursor:pointer}
 small.muted{color:var(--muted)}
+
+/* PAGE LAYOUT OVERRIDE FOR APP PAGES */
+body.app-layout {
+    display: block !important;
+    align-items: unset !important;
+    justify-content: unset !important;
+}
+.page-wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+main {
+    flex: 1;
+    padding: 40px;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
